@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace TextEditor
 {
@@ -29,6 +30,38 @@ namespace TextEditor
         private void NewFile_Click(object sender, RoutedEventArgs e)
         {
             editor.Document = new FlowDocument();
+        }
+        private void OpenFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Text files (*.txt)|*.txt|Rich Text Format (*.rtf)|*.rtf|PDF (*.pdf)|*.pdf";
+            if (dialog.ShowDialog() == true)
+            {
+                string filename = dialog.FileName;
+                string extension = Path.GetExtension(filename).ToLower();
+                if (extension == ".txt")
+                {
+                    using (StreamReader reader = new StreamReader(filename))
+                    {
+                        editor.Document = new FlowDocument(new Paragraph(new Run(reader.ReadToEnd())));
+                    }
+                }
+                else
+                {
+                    TextRange range = new TextRange(editor.Document.ContentStart, editor.Document.ContentEnd);
+                    using (FileStream stream = new FileStream(filename, FileMode.Open))
+                    {
+                        if (extension == ".rtf")
+                        {
+                            range.Load(stream, DataFormats.Rtf);
+                        }
+                        else if (extension == ".pdf")
+                        {
+                            range.Load(stream, DataFormats.XamlPackage);
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -88,5 +88,9 @@ namespace TextEditor
                 }
             }
         }
+        private void SaveFileAs_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFile_Click(sender, e);
+        }
     }
 }

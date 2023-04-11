@@ -63,5 +63,30 @@ namespace TextEditor
                 }
             }
         }
+        private void SaveFile_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Text files (*.txt)|*.txt|Rich Text Format (*.rtf)|*.rtf|PDF (*.pdf)|*.pdf";
+            if (dialog.ShowDialog() == true)
+            {
+                string filename = dialog.FileName;
+                string extension = Path.GetExtension(filename).ToLower();
+                TextRange range = new TextRange(editor.Document.ContentStart, editor.Document.ContentEnd);
+                using (FileStream stream = new FileStream(filename, FileMode.Create))
+                {
+                    if (extension == ".txt")
+                    {
+                        using (StreamWriter writer = new StreamWriter(stream))
+                        {
+                            writer.Write(range.Text);
+                        }
+                    }
+                    else
+                    {
+                        range.Save(stream, extension == ".rtf" ? DataFormats.Rtf : DataFormats.XamlPackage);
+                    }
+                }
+            }
+        }
     }
 }

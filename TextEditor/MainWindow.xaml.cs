@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Win32;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +25,10 @@ namespace TextEditor
         public MainWindow()
         {
             InitializeComponent();
+        }
+        private void NewFile_Click(object sender, RoutedEventArgs e)
+        {
+            editor.Document = new FlowDocument();
         }
     }
 }
